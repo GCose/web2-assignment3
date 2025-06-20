@@ -1,0 +1,93 @@
+<div class="register__container">
+  <div class="register__card">
+    <div class="theme__toggle">
+      <button class="theme__btn" (click)="toggleTheme()">
+        {{ (themeService.isDarkMode$ | async) ? '☀️' : '🌙' }}
+      </button>
+    </div>
+
+    <div class="register__header">
+      <h1>Create Account</h1>
+      <p>Join us and get started</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="register__form">
+      <div class="form__group">
+        <label for="fullName">Full Name</label>
+        <input
+          type="text"
+          id="fullName"
+          [(ngModel)]="userData.fullName"
+          name="fullName"
+          placeholder="Enter your full name"
+          class="form__input"
+          required
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="userData.email"
+          name="email"
+          placeholder="Enter your email"
+          class="form__input"
+          required
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="role">Role</label>
+        <select
+          id="role"
+          [(ngModel)]="userData.roleName"
+          name="role"
+          class="form__input"
+        >
+          <option *ngFor="let role of roles" [value]="role.name">
+            {{ role.name }} - {{ role.description }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form__group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="userData.password"
+          name="password"
+          placeholder="Enter your password"
+          class="form__input"
+          required
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          [(ngModel)]="userData.confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm your password"
+          class="form__input"
+          required
+        />
+      </div>
+
+      <div class="error__message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button type="submit" class="register__btn" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading">Creating Account...</span>
+      </button>
+    </form>
+
+    <div class="register__footer">
+      <p>Already have an account? <a routerLink="/login">Sign in here</a></p>
+    </div>
+  </div>
+</div>

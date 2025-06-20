@@ -1,0 +1,53 @@
+<div class="login__container">
+  <div class="login__card">
+    <div class="theme__toggle">
+      <button class="theme__btn" (click)="toggleTheme()">
+        {{ (themeService.isDarkMode$ | async) ? '☀️' : '🌙' }}
+      </button>
+    </div>
+
+    <div class="login__header">
+      <h1>Welcome Back</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login__form">
+      <div class="form__group">
+        <label for="email">Email Address</label>
+        <input
+          required
+          id="email"
+          name="email"
+          type="email"
+          class="form__input"
+          placeholder="Enter your email"
+          [(ngModel)]="credentials.email"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="password">Password</label>
+        <input
+          required
+          id="password"
+          type="password"
+          name="password"
+          class="form__input"
+          placeholder="Enter your password"
+          [(ngModel)]="credentials.password"
+        />
+      </div>
+
+      <div class="error__message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button type="submit" class="login__btn" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing In...</span>
+      </button>
+    </form>
+
+    <div class="login__footer">
+      <p>Don't have an account? <a routerLink="/register">Sign up here</a></p>
+    </div>
+  </div>
+</div>

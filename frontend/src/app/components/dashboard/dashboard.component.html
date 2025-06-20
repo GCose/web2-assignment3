@@ -1,0 +1,175 @@
+<div class="dashboard__container">
+  <!--==================== Header ====================-->
+  <header class="dashboard__header">
+    <div class="header__content">
+      <div class="user__info">
+        <h1>Welcome, {{ currentUser?.fullName }}</h1>
+        <span class="user__role" [ngClass]="getRoleClass(currentUser?.role)">
+          {{ currentUser?.role }}
+        </span>
+      </div>
+      <div class="header__actions">
+        <button class="theme__btn" (click)="toggleTheme()">
+          {{ (themeService.isDarkMode$ | async) ? "Light" : "Dark" }}
+        </button>
+        <button class="logout__btn" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+  <!--==================== End of Header ====================-->
+
+  <!--==================== Main Content ====================-->
+  <main class="dashboard__main">
+    <!--==================== Admin Section ====================-->
+    <div *ngIf="isAdmin()" class="admin__section">
+      <div class="section-header">
+        <h2>Administrator Dashboard</h2>
+        <p>Manage users and system roles</p>
+      </div>
+
+      <div class="dashboard__grid">
+        <!--==================== Users Management ====================-->
+        <div class="dashboard__card">
+          <h3>User Management</h3>
+          <div class="card__content">
+            <div *ngIf="isLoadingUsers" class="loading">Loading users...</div>
+            <div *ngIf="!isLoadingUsers && users.length === 0" class="no-data">
+              No users found
+            </div>
+            <div *ngIf="!isLoadingUsers && users.length > 0" class="users-list">
+              <div *ngFor="let user of users" class="user-item">
+                <div class="user-details">
+                  <strong>{{ user.fullName }}</strong>
+                  <span class="user__email">{{ user.email }}</span>
+                  <span
+                    class="user__role-badge"
+                    [ngClass]="getRoleClass(user.role.name)"
+                  >
+                    {{ user.role.name }}
+                  </span>
+                </div>
+                <div class="user-actions">
+                  <select
+                    (change)="onRoleChange($event, user._id)"
+                    [value]="user.role.name"
+                    class="role-select"
+                  >
+                    <option *ngFor="let role of roles" [value]="role.name">
+                      {{ role.name }}
+                    </option>
+                  </select>
+                  <button
+                    class="deactivate-btn"
+                    (click)="deactivateUser(user._id)"
+                  >
+                    Deactivate
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--==================== End of Users Management ====================-->
+
+        <!--==================== Roles Management ====================-->
+        <div class="dashboard__card">
+          <h3>System Roles</h3>
+          <div class="card__content">
+            <div *ngIf="isLoadingRoles" class="loading">Loading roles...</div>
+            <div *ngIf="!isLoadingRoles" class="roles-list">
+              <div *ngFor="let role of roles" class="role-item">
+                <div class="role-header">
+                  <span class="role-name" [ngClass]="getRoleClass(role.name)">
+                    {{ role.name }}
+                  </span>
+                </div>
+                <p class="role-description">{{ role.description }}</p>
+                <div class="role-permissions">
+                  <span
+                    *ngFor="let permission of role.permissions"
+                    class="permission-tag"
+                  >
+                    {{ permission }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--==================== End of Roles Management ====================-->
+      </div>
+    </div>
+    <!--==================== End of Admin Section ====================-->
+
+    <!--==================== Editor Section ====================-->
+    <div *ngIf="isEditor()" class="editor-section">
+      <div class="section-header">
+        <h2>Editor Dashboard</h2>
+        <p>Create and edit content</p>
+      </div>
+
+      <div class="dashboard__grid">
+        <div class="dashboard__card">
+          <h3>Content Management</h3>
+          <div class="card__content">
+            <p>
+              You have editor privileges to create, read, and update content.
+            </p>
+            <div class="permissions-list">
+              <div class="permission-item enabled">Create Content</div>
+              <div class="permission-item enabled">Read Content</div>
+              <div class="permission-item enabled">Update Content</div>
+              <div class="permission-item disabled">Delete Content</div>
+              <div class="permission-item disabled">Manage Users</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard__card">
+          <h3>Quick Actions</h3>
+          <div class="card__content">
+            <button class="action-btn primary">Create New Post</button>
+            <button class="action-btn secondary">Edit Existing Content</button>
+            <button class="action-btn secondary">View Analytics</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--==================== End of Editor Section ====================-->
+
+    <!--==================== Viewer Section ====================-->
+    <div *ngIf="isViewer()" class="viewer-section">
+      <div class="section-header">
+        <h2>Viewer Dashboard</h2>
+        <p>Browse and view content</p>
+      </div>
+
+      <div class="dashboard__grid">
+        <div class="dashboard__card">
+          <h3>Available Content</h3>
+          <div class="card__content">
+            <p>You have read-only access to view content.</p>
+            <div class="permissions-list">
+              <div class="permission-item enabled">Read Content</div>
+              <div class="permission-item disabled">Create Content</div>
+              <div class="permission-item disabled">Update Content</div>
+              <div class="permission-item disabled">Delete Content</div>
+              <div class="permission-item disabled">Manage Users</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard__card">
+          <h3>Browse Content</h3>
+          <div class="card__content">
+            <button class="action-btn primary">View All Posts</button>
+            <button class="action-btn secondary">Search Content</button>
+            <button class="action-btn secondary">Filter by Category</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--==================== End of Viewer Section ====================-->
+  </main>
+  <!--==================== End of Main Content ====================-->
+</div>
