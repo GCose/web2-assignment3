@@ -19,6 +19,7 @@ This system provides secure user authentication with three distinct roles: Admin
 ## Technology Stack
 
 **Backend:**
+
 - Node.js with Express.js
 - MongoDB with Mongoose ODM
 - JWT for authentication
@@ -26,6 +27,7 @@ This system provides secure user authentication with three distinct roles: Admin
 - CORS enabled
 
 **Frontend:**
+
 - Angular (standalone components)
 - Angular Router with guards
 - HTTP interceptors for token management
@@ -34,6 +36,7 @@ This system provides secure user authentication with three distinct roles: Admin
 ## Installation Instructions
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - MongoDB (local or cloud instance)
 - Angular CLI
@@ -41,24 +44,28 @@ This system provides secure user authentication with three distinct roles: Admin
 ### Backend Setup
 
 1. Navigate to the backend directory:
+
 ```bash
 cd backend
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file in the backend directory with:
+
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/roleauth
-JWT_SECRET=your_jwt_secret_key_here
+JWT_SECRET=my_super_secret_jwt_key_here_keeping_it_long_and_random_because_why_not
 JWT_EXPIRES_IN=7d
 ```
 
 4. Start the backend server:
+
 ```bash
 npm run dev
 ```
@@ -68,16 +75,19 @@ The backend server will run on http://localhost:5000
 ### Frontend Setup
 
 1. Navigate to the frontend directory:
+
 ```bash
 cd frontend
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the development server:
+
 ```bash
 ng serve
 ```
@@ -89,16 +99,19 @@ The frontend will run on http://localhost:4200
 The system automatically creates three test users with different roles:
 
 **Admin User:**
+
 - Email: sarah.johnson@roleauth.com
 - Password: SecurePass123!
 - Role: Admin (Full access to user management, role assignment)
 
 **Editor User:**
+
 - Email: michael.chen@roleauth.com
 - Password: EditPass456!
 - Role: Editor (Create, read, update permissions)
 
 **Viewer User:**
+
 - Email: emma.rodriguez@roleauth.com
 - Password: ViewPass789!
 - Role: Viewer (Read-only access)
@@ -106,17 +119,20 @@ The system automatically creates three test users with different roles:
 ## API Endpoints
 
 ### Authentication Routes
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `GET /api/auth/currentUser` - Get current user info
 
 ### User Management Routes (Admin only)
+
 - `GET /api/users` - Get all users
 - `GET /api/users/:id` - Get user by ID
 - `PUT /api/users/:id/role` - Update user role
 - `PUT /api/users/:id/deactivate` - Deactivate user
 
 ### Role Management Routes
+
 - `GET /api/roles` - Get all roles
 - `POST /api/roles` - Create new role (Admin only)
 - `PUT /api/roles/:id` - Update role (Admin only)
@@ -125,6 +141,7 @@ The system automatically creates three test users with different roles:
 ## Application Structure
 
 ### Backend Architecture
+
 ```
 backend/
 ├── controllers/         # Business logic
@@ -135,6 +152,7 @@ backend/
 ```
 
 ### Frontend Architecture
+
 ```
 frontend/src/app/
 ├── components/         # UI components
@@ -147,17 +165,20 @@ frontend/src/app/
 ## Role Permissions
 
 **Admin:**
+
 - Full system access
 - User management
 - Role assignment
 - Create, read, update, delete operations
 
 **Editor:**
+
 - Create, read, update content
 - Cannot delete or manage users
 - Limited administrative access
 
 **Viewer:**
+
 - Read-only access
 - View content only
 - No modification permissions
