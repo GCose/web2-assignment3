@@ -1,0 +1,90 @@
+/**=========================
+ * DASHBOARD HEADER STYLES
+ =========================*/
+.dashboard__header {
+  z-index: 10;
+  position: relative;
+  padding: 1rem 1.5rem;
+}
+
+.dashboard__header-wrapper {
+  display: flex;
+  margin: 0 auto;
+  max-width: 1280px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/**======================
+ * USER SECTION STYLES
+ ======================*/
+.dashboard__header-user {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard__header-info {
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard__header-greeting {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.dashboard__header-role {
+  display: flex;
+  align-items: center;
+}
+
+/**========================
+ * HEADER ACTIONS STYLES
+ ========================*/
+.dashboard__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard__header-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.dashboard__header-logout {
+  background: var(--error);
+  color: white;
+}
+
+.dashboard__header-logout:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/**==================
+ * BREAKPOINT STYLES
+ ==================*/
+@media (max-width: 768px) {
+  .dashboard__header {
+    padding: 1rem;
+  }
+
+  .dashboard__header-wrapper {
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .dashboard__header-greeting {
+    font-size: 1.125rem;
+  }
+
+  .dashboard__header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}

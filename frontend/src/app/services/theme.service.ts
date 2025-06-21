@@ -6,8 +6,8 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class ThemeService {
-  private isDarkMode = new BehaviorSubject<boolean>(false);
-  public isDarkMode$ = this.isDarkMode.asObservable();
+  private _isDarkMode = new BehaviorSubject<boolean>(false);
+  public isDarkMode$ = this._isDarkMode.asObservable();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
@@ -41,11 +41,11 @@ export class ThemeService {
   }
 
   toggleTheme(): void {
-    this.setTheme(!this.isDarkMode.value);
+    this.setTheme(!this._isDarkMode.value);
   }
 
   setTheme(isDark: boolean): void {
-    this.isDarkMode.next(isDark);
+    this._isDarkMode.next(isDark);
 
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -69,6 +69,10 @@ export class ThemeService {
   }
 
   getCurrentTheme(): boolean {
-    return this.isDarkMode.value;
+    return this._isDarkMode.value;
+  }
+
+  isDarkMode(): boolean {
+    return this._isDarkMode.value;
   }
 }

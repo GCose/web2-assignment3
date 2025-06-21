@@ -4,11 +4,23 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { ThemeService } from '../../services/theme.service';
+import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
+import { StatsCardsComponent } from './components/stats-cards/stats-cards.component';
+import { UserTableComponent } from './components/user-table/user-table.component';
+import { RolesOverviewComponent } from './components/roles-overview/roles-overview.component';
+import { WelcomeCardComponent } from './components/welcome-card/welcome-card.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DashboardHeaderComponent,
+    StatsCardsComponent,
+    UserTableComponent,
+    RolesOverviewComponent,
+    WelcomeCardComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -18,6 +30,13 @@ export class DashboardComponent implements OnInit {
   roles: any[] = [];
   isLoadingUsers = false;
   isLoadingRoles = false;
+  stats = {
+    totalUsers: 0,
+    activeUsers: 0,
+    adminUsers: 0,
+    editorUsers: 0,
+    viewerUsers: 0,
+  };
 
   constructor(
     private authService: AuthService,
@@ -29,7 +48,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
+    this.loadDashboardData();
+  }
 
+  loadDashboardData(): void {
     if (this.isAdmin()) {
       this.loadUsers();
       this.loadRoles();
@@ -43,6 +65,7 @@ export class DashboardComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (response) => {
         this.users = response.users;
+        this.calculateStats();
         this.isLoadingUsers = false;
         this.cdr.markForCheck();
       },
@@ -72,38 +95,28 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  updateUserRole(userId: string, newRole: string): void {
-    this.userService.updateUserRole(userId, newRole).subscribe({
-      next: (response) => {
-        this.loadUsers();
-      },
-      error: (error) => {
-        console.error('Error updating user role:', error);
-      },
-    });
+  calculateStats(): void {
+    this.stats.totalUsers = this.users.length;
+    this.stats.activeUsers = this.users.filter(
+      (user) => user.isActive !== false
+    ).length;
+    this.stats.adminUsers = this.users.filter(
+      (user) => user.role?.name === 'Admin'
+    ).length;
+    this.stats.editorUsers = this.users.filter(
+      (user) => user.role?.name === 'Editor'
+    ).length;
+    this.stats.viewerUsers = this.users.filter(
+      (user) => user.role?.name === 'Viewer'
+    ).length;
   }
 
-  onRoleChange(event: Event, userId: string): void {
-    const target = event.target as HTMLSelectElement;
-    this.updateUserRole(userId, target.value);
+  onUserRoleUpdated(): void {
+    this.loadUsers();
   }
 
-  deactivateUser(userId: string): void {
-    if (confirm('Are you sure you want to deactivate this user?')) {
-      this.userService.deactivateUser(userId).subscribe({
-        next: (response) => {
-          this.loadUsers();
-        },
-        error: (error) => {
-          console.error('Error deactivating user:', error);
-        },
-      });
-    }
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  onUserDeactivated(): void {
+    this.loadUsers();
   }
 
   isAdmin(): boolean {
@@ -116,22 +129,5 @@ export class DashboardComponent implements OnInit {
 
   isViewer(): boolean {
     return this.currentUser?.role === 'Viewer';
-  }
-
-  getRoleClass(role: string): string {
-    switch (role) {
-      case 'Admin':
-        return 'role-admin';
-      case 'Editor':
-        return 'role-editor';
-      case 'Viewer':
-        return 'role-viewer';
-      default:
-        return '';
-    }
-  }
-
-  toggleTheme(): void {
-    this.themeService.toggleTheme();
   }
 }
