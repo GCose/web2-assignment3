@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
@@ -24,11 +25,23 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadStoredUser();
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadStoredUser();
+    }
   }
 
   private loadStoredUser(): void {
+    if (
+      !isPlatformBrowser(this.platformId) ||
+      typeof localStorage === 'undefined'
+    ) {
+      return;
+    }
+
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
 
@@ -50,14 +63,24 @@ export class AuthService {
   }
 
   private handleAuthSuccess(response: AuthResponse): void {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('user', JSON.stringify(response.user));
+    if (
+      isPlatformBrowser(this.platformId) &&
+      typeof localStorage !== 'undefined'
+    ) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+    }
     this.currentUserSubject.next(response.user);
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    if (
+      isPlatformBrowser(this.platformId) &&
+      typeof localStorage !== 'undefined'
+    ) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
     this.currentUserSubject.next(null);
   }
 
@@ -66,6 +89,12 @@ export class AuthService {
   }
 
   getToken(): string | null {
+    if (
+      !isPlatformBrowser(this.platformId) ||
+      typeof localStorage === 'undefined'
+    ) {
+      return null;
+    }
     return localStorage.getItem('token');
   }
 
