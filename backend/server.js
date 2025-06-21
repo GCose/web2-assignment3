@@ -1,123 +1,43 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const { connectDatabase } = require("./config/database");
+const { runSeeders } = require("./seeders");
 const routes = require("./routes/index");
-const User = require("./models/User");
-const Role = require("./models/Role");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
-app.use(
-  express.json({
-    limit: "10mb",
-  })
-);
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use("/api", routes);
 
 app.get("/", (_req, res) => {
-  res.json({ message: "Role-Based Authentication API is running." });
+  res.json({
+    message: "Role-Based Authentication API is running.",
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+  });
 });
 
-const initalizeRoles = async () => {
+const startServer = async () => {
   try {
-    const roleCount = await Role.countDocuments();
+    await connectDatabase();
 
-    if (roleCount === 0) {
-      const defaultRoles = [
-        {
-          name: "Admin",
-          permissions: [
-            "create",
-            "read",
-            "update",
-            "delete",
-            "manage_users",
-            "manage_roles",
-          ],
-          description:
-            "Full system access with user and role management capabilities",
-        },
-        {
-          name: "Editor",
-          permissions: ["create", "read", "update"],
-          description:
-            "Can create, view, and edit content but cannot delete or manage users",
-        },
-        {
-          name: "Viewer",
-          permissions: ["read"],
-          description: "Read-only access to view content",
-        },
-      ];
+    await runSeeders();
 
-      await Role.insertMany(defaultRoles);
-      console.log("Default roles created successfully.");
-    }
-  } catch (error) {
-    console.error("Error initializing roles:", error);
-  }
-};
-
-const createDefaultUsers = async () => {
-  const usersToCreate = [
-    {
-      fullName: "Sarah Johnson",
-      email: "sarah.johnson@roleauth.com",
-      password: "SecurePass123!",
-      roleName: "Admin",
-    },
-    {
-      fullName: "Michael Chen",
-      email: "michael.chen@roleauth.com",
-      password: "EditPass456!",
-      roleName: "Editor",
-    },
-    {
-      fullName: "Emma Rodriguez",
-      email: "emma.rodriguez@roleauth.com",
-      password: "ViewPass789!",
-      roleName: "Viewer",
-    },
-  ];
-
-  for (const userData of usersToCreate) {
-    const exists = await User.findOne({ email: userData.email });
-    if (!exists) {
-      const role = await Role.findOne({ name: userData.roleName });
-      if (role) {
-        await User.create({
-          fullName: userData.fullName,
-          email: userData.email,
-          password: userData.password,
-          role: role._id,
-        });
-        console.log(
-          `Created: ${userData.fullName} (${userData.email}) - ${userData.roleName} | Password: ${userData.password}`
-        );
-      }
-    } else {
-      console.log(`User already exists: ${userData.email}`);
-    }
-  }
-};
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(async () => {
-    console.log("MongoDB connected successfully");
-    await initalizeRoles();
-    await createDefaultUsers();
     app.listen(PORT, () => {
-      console.log(`Server running on port http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error("Database connection failed", error);
-  });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
