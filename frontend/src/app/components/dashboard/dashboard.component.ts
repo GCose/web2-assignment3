@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -23,7 +23,8 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -37,28 +38,36 @@ export class DashboardComponent implements OnInit {
 
   loadUsers(): void {
     this.isLoadingUsers = true;
+    this.cdr.markForCheck();
+
     this.userService.getAllUsers().subscribe({
       next: (response) => {
         this.users = response.users;
         this.isLoadingUsers = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error loading users:', error);
         this.isLoadingUsers = false;
+        this.cdr.markForCheck();
       },
     });
   }
 
   loadRoles(): void {
     this.isLoadingRoles = true;
+    this.cdr.markForCheck();
+
     this.userService.getAllRoles().subscribe({
       next: (response) => {
         this.roles = response.roles;
         this.isLoadingRoles = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error loading roles:', error);
         this.isLoadingRoles = false;
+        this.cdr.markForCheck();
       },
     });
   }
