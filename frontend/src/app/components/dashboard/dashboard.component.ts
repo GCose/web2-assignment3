@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { ThemeService } from '../../services/theme.service';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
+import { DashboardSidebarComponent } from './components/dashboard-sidebar/dashboard-sidebar.component';
 import { StatsCardsComponent } from './components/stats-cards/stats-cards.component';
 import { UserTableComponent } from './components/user-table/user-table.component';
 import { RolesOverviewComponent } from './components/roles-overview/roles-overview.component';
@@ -16,6 +17,7 @@ import { WelcomeCardComponent } from './components/welcome-card/welcome-card.com
   imports: [
     CommonModule,
     DashboardHeaderComponent,
+    DashboardSidebarComponent,
     StatsCardsComponent,
     UserTableComponent,
     RolesOverviewComponent,
@@ -98,16 +100,16 @@ export class DashboardComponent implements OnInit {
   calculateStats(): void {
     this.stats.totalUsers = this.users.length;
     this.stats.activeUsers = this.users.filter(
-      (user) => user.isActive !== false
+      (user) => user.status === 'Active'
     ).length;
     this.stats.adminUsers = this.users.filter(
-      (user) => user.role?.name === 'Admin'
+      (user) => user.role === 'Admin'
     ).length;
     this.stats.editorUsers = this.users.filter(
-      (user) => user.role?.name === 'Editor'
+      (user) => user.role === 'Editor'
     ).length;
     this.stats.viewerUsers = this.users.filter(
-      (user) => user.role?.name === 'Viewer'
+      (user) => user.role === 'Viewer'
     ).length;
   }
 
