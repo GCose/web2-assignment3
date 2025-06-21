@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -30,7 +30,8 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -41,9 +42,11 @@ export class RegisterComponent implements OnInit {
     this.userService.getAllRoles().subscribe({
       next: (response) => {
         this.roles = response.roles;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error loading roles:', error);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -53,6 +56,7 @@ export class RegisterComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.cdr.markForCheck();
 
     const { confirmPassword, ...registerData } = this.userData;
 
@@ -63,6 +67,7 @@ export class RegisterComponent implements OnInit {
       error: (error) => {
         this.errorMessage = error.error.message || 'Registration failed';
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }

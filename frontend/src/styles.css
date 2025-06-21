@@ -8,6 +8,13 @@
   --bg-tertiary: #f1f5f9;
   --bg-secondary: #f8fafc;
 
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --error-bg: #fee2e2;
+  --warning-bg: #fef3c7;
+  --success-bg: #d1fae5;
+
   --text-muted: #94a3b8;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
@@ -19,22 +26,15 @@
   --accent-secondary: #8b5cf6;
   --accent-primary-hover: #2563eb;
 
-  --error: #ef4444;
-  --warning: #f59e0b;
-  --success: #10b981;
-  --error-bg: #fee2e2;
-  --warning-bg: #fef3c7;
-  --success-bg: #d1fae5;
+  --radius-xl: 1rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-sm: 0.375rem;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-
-  --radius-xl: 1rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-sm: 0.375rem;
 }
 
 .dark-theme {
@@ -43,6 +43,13 @@
   --bg-primary: #0f172a;
   --bg-tertiary: #334155;
   --bg-secondary: #1e293b;
+
+  --error: #ff0000;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error-bg: #330101;
+  --success-bg: #064e3b;
+  --warning-bg: #78350f;
 
   --text-muted: #94a3b8;
   --text-primary: #f8fafc;
@@ -54,13 +61,6 @@
   --accent-primary: #3b82f6;
   --accent-secondary: #8b5cf6;
   --accent-primary-hover: #60a5fa;
-
-  --error: #ef4444;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error-bg: #7f1d1d;
-  --success-bg: #064e3b;
-  --warning-bg: #78350f;
 }
 
 /**===============
@@ -108,4 +108,143 @@ select:focus {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-hover);
+}
+
+/**=======================
+  * ANIMATED ORBS STYLES
+ =======================*/
+.gradient__orb {
+  opacity: 0.3;
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.orb__1 {
+  top: 10%;
+  left: 10%;
+  width: 300px;
+  height: 300px;
+  animation-delay: 0s;
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+}
+
+.orb__2 {
+  top: 60%;
+  right: 5%;
+  width: 200px;
+  height: 200px;
+  animation-delay: 2s;
+  background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+}
+
+.orb__3 {
+  top: 20%;
+  right: 15%;
+  width: 250px;
+  height: 250px;
+  animation-delay: 4s;
+  background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/**==================
+ * ANIMATION STYLES
+ ==================*/
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  66% {
+    transform: translateY(10px) translateX(-10px);
+  }
+}
+
+/**=====================
+ * TOGGLE BUTTON STYLES
+ =====================*/
+.theme__toggle {
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  display: flex;
+  cursor: pointer;
+  position: absolute;
+  border-radius: 12px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme__toggle:hover {
+  outline: none;
+  transform: scale(1.05);
+  background: var(--bg-primary);
+}
+
+/**=================
+ * SPINNER STYLES
+ =================*/
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border-top: 2px solid white;
+  animation: spin 1s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/**==================
+ * ANIMATION STYLES
+ ==================*/
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/**=======================
+ * ERROR MESSAGE STYLES
+ =======================*/
+.error__message {
+  gap: 8px;
+  display: flex;
+  font-size: 0.9rem;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  color: var(--error);
+  align-items: center;
+  border-radius: 12px;
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  animation: shake 0.5s ease-in-out;
+}
+
+/**==================
+ * ANIMATION STYLES
+ ==================*/
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }

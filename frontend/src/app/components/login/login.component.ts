@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -24,7 +24,8 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   onSubmit(): void {
@@ -35,6 +36,7 @@ export class LoginComponent {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.cdr.markForCheck();
 
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
@@ -43,6 +45,7 @@ export class LoginComponent {
       error: (error) => {
         this.errorMessage = error.error.message || 'Login failed';
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
