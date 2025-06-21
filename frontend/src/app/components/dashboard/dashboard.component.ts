@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit {
   roles: any[] = [];
   isLoadingUsers = false;
   isLoadingRoles = false;
+  isMobileMenuOpen = false;
   stats = {
     totalUsers: 0,
     activeUsers: 0,
@@ -66,7 +67,7 @@ export class DashboardComponent implements OnInit {
 
     this.userService.getAllUsers().subscribe({
       next: (response) => {
-        this.users = response.users;
+        this.users = response.users || response || [];
         this.calculateStats();
         this.isLoadingUsers = false;
         this.cdr.markForCheck();
@@ -85,7 +86,7 @@ export class DashboardComponent implements OnInit {
 
     this.userService.getAllRoles().subscribe({
       next: (response) => {
-        this.roles = response.roles;
+        this.roles = response.roles || response || [];
         this.isLoadingRoles = false;
         this.cdr.markForCheck();
       },
@@ -98,19 +99,46 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateStats(): void {
+    this.stats = {
+      totalUsers: 0,
+      activeUsers: 0,
+      adminUsers: 0,
+      editorUsers: 0,
+      viewerUsers: 0,
+    };
+
+    if (!this.users || !Array.isArray(this.users) || this.users.length === 0) {
+      return;
+    }
+
     this.stats.totalUsers = this.users.length;
     this.stats.activeUsers = this.users.filter(
-      (user) => user.status === 'Active'
+      (user) => user.isActive === true
     ).length;
-    this.stats.adminUsers = this.users.filter(
-      (user) => user.role === 'Admin'
-    ).length;
-    this.stats.editorUsers = this.users.filter(
-      (user) => user.role === 'Editor'
-    ).length;
-    this.stats.viewerUsers = this.users.filter(
-      (user) => user.role === 'Viewer'
-    ).length;
+
+    this.users.forEach((user) => {
+      if (user && user.role && user.role.name) {
+        switch (user.role.name) {
+          case 'Admin':
+            this.stats.adminUsers++;
+            break;
+          case 'Editor':
+            this.stats.editorUsers++;
+            break;
+          case 'Viewer':
+            this.stats.viewerUsers++;
+            break;
+        }
+      }
+    });
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
   }
 
   onUserRoleUpdated(): void {

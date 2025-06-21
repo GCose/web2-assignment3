@@ -1,6 +1,26 @@
 <!--==================== Header Container ====================-->
 <header class="dashboard__header">
   <div class="dashboard__header-wrapper">
+    <!--==================== Mobile Navigation Toggle ====================-->
+    <button
+      class="mobile-nav__toggle"
+      (click)="onToggleMobileMenu()"
+      aria-label="Toggle mobile menu"
+    >
+      <svg
+        class="mobile-nav__icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <!--==================== End of Mobile Navigation Toggle ====================-->
+
     <!--==================== User Profile Section ====================-->
     <div class="dashboard__header-user">
       <!--==================== User Avatar ====================-->
@@ -27,7 +47,11 @@
     <!--==================== Header Actions ====================-->
     <div class="dashboard__header-actions">
       <!--==================== Theme Toggle ====================-->
-      <button (click)="toggleTheme()" class="btn btn--ghost theme__toggle">
+      <button
+        (click)="toggleTheme()"
+        class="btn btn--ghost btn--icon dashboard__theme-toggle"
+        title="Toggle theme"
+      >
         <svg
           *ngIf="themeService.isDarkMode()"
           class="dashboard__header-icon"
@@ -52,15 +76,6 @@
         </svg>
       </button>
       <!--==================== End of Theme Toggle ====================-->
-
-      <!--==================== Logout Button ====================-->
-      <button
-        (click)="logout()"
-        class="btn btn--primary dashboard__header-logout"
-      >
-        Logout
-      </button>
-      <!--==================== End of Logout Button ====================-->
     </div>
     <!--==================== End of Header Actions ====================-->
   </div>

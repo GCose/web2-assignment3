@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
@@ -13,6 +13,7 @@ import { AuthService } from '../../../../services/auth.service';
 export class DashboardHeaderComponent implements OnInit {
   @Input() currentUser: any;
   @Input() themeService: any;
+  @Output() toggleMobileMenu = new EventEmitter<void>();
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -22,9 +23,8 @@ export class DashboardHeaderComponent implements OnInit {
     this.themeService.toggleTheme();
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  onToggleMobileMenu(): void {
+    this.toggleMobileMenu.emit();
   }
 
   getRoleClass(role: string): string {

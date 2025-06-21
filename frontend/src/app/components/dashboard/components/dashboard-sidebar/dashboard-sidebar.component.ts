@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -12,7 +14,7 @@ export class DashboardSidebarComponent implements OnInit {
   @Input() currentUser: any;
   @Input() themeService: any;
 
-  constructor() {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -35,5 +37,10 @@ export class DashboardSidebarComponent implements OnInit {
       Viewer: 'badge--viewer',
     };
     return roleClasses[role] || 'badge--viewer';
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

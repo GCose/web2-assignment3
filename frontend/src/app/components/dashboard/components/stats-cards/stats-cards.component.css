@@ -5,7 +5,7 @@
   gap: 1.5rem;
   display: grid;
   margin-bottom: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 /**===================
@@ -95,11 +95,6 @@
  * BREAKPOINT STYLES
  ===================*/
 @media (max-width: 768px) {
-  .stats__grid {
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
   .stats__card {
     padding: 1rem;
   }
